@@ -1,0 +1,390 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                     KAAVAL SYSTEM - COMPLETE FIX PLAN                        ║
+║                        GPU/CUDA + Backend Setup                              ║
+║                                                                              ║
+║                    Status: PLANNED (Ready to Execute)                        ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+
+EXECUTIVE SUMMARY
+═════════════════════════════════════════════════════════════════════════════
+
+Current Issues:
+  ❌ Python 3.13.9 is TOO NEW (PyTorch support only up to 3.12)
+  ❌ PyTorch not installed (needed for ML models)
+  ❌ CUDA not properly configured
+  ❌ Backend dependencies partially installed
+  ⚠️  Network connectivity issues with large downloads
+
+Solution Strategy:
+  ✓ Downgrade to Python 3.11 (stable, widely supported)
+  ✓ Install PyTorch with CUDA 12.1 support using conda (faster, cached)
+  ✓ Install all missing backend packages
+  ✓ Verify GPU acceleration is working
+  ✓ Start backend server
+  ✓ Test camera and ML modules
+
+
+═════════════════════════════════════════════════════════════════════════════
+PHASE 1: ENVIRONMENT SETUP (Python Downgrade)
+═════════════════════════════════════════════════════════════════════════════
+
+Why Python 3.11?
+  • PyTorch stable support: ✅ Python 3.8-3.12
+  • TorchVision support: ✅ Python 3.8-3.12
+  • OpenCV support: ✅ Full support
+  • All ML packages: ✅ Full support
+  • Current: Python 3.13.9 ❌ Not officially supported by PyTorch
+
+Steps:
+  1. Create new conda environment with Python 3.11
+     Command: conda create -n kaaval-py311 python=3.11 -y
+  
+  2. Activate the new environment
+     Command: conda activate kaaval-py311
+  
+  3. Verify Python version
+     Command: python --version
+     Expected: Python 3.11.x
+
+Status: [ ] NOT STARTED
+
+
+═════════════════════════════════════════════════════════════════════════════
+PHASE 2: PYTORCH + CUDA INSTALLATION (GPU Acceleration)
+═════════════════════════════════════════════════════════════════════════════
+
+System Specs:
+  GPU: NVIDIA GeForce RTX 3050 (6GB VRAM)
+  GPU Compute Capability: 8.6
+  CUDA Driver: 581.57
+  CUDA Toolkit: 13.0
+  
+Why CUDA 12.1 (not 13.0)?
+  • PyTorch has best support for CUDA 12.1
+  • CUDA 12.1 drivers are backward compatible with CUDA 13.0
+  • Ensures maximum stability and performance
+
+Steps:
+  1. Install PyTorch with CUDA 12.1 via conda
+     Command: conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia -y
+     
+     Why conda instead of pip?
+     • Uses local package cache (faster)
+     • Better dependency resolution
+     • CUDA version automatic handling
+     • Network more stable
+     
+     Estimated time: 5-10 minutes (depends on cache)
+     Download size: ~2.2 GB (cached: ~200 MB)
+  
+  2. Verify PyTorch installation
+     Command: python -c "import torch; print(f'PyTorch: {torch.__version__}'); 
+                         print(f'CUDA: {torch.cuda.is_available()}'); 
+                         print(f'Device: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"CPU\"}')"
+     
+     Expected output:
+     ✅ PyTorch: 2.x.x+cu121
+     ✅ CUDA: True
+     ✅ Device: NVIDIA GeForce RTX 3050
+
+Status: [ ] NOT STARTED
+
+
+═════════════════════════════════════════════════════════════════════════════
+PHASE 3: INSTALL BACKEND DEPENDENCIES
+═════════════════════════════════════════════════════════════════════════════
+
+All required packages (already partially installed):
+
+Core Framework:
+  ✅ fastapi==0.110.0 or higher
+  ✅ uvicorn==0.29.0 or higher
+  ✅ pydantic==2.x (already v2.12.4)
+  ✅ pydantic-settings (already v2.12.0)
+
+Database & Utils:
+  ✅ sqlalchemy==2.0.23 or higher
+  ✅ python-multipart==0.0.6 or higher
+  ✅ aiofiles==23.2.1 or higher
+
+ML & Computer Vision:
+  ✅ numpy==1.26.2 or higher (already 2.2.6)
+  ✅ opencv-python==4.8.1.78 or higher (already 4.12.0.88)
+  ✅ scikit-learn==1.3.2 or higher
+
+ONNX Runtime (GPU):
+  ✅ onnxruntime-gpu==1.16.1 or higher (already 1.23.2)
+
+Face Recognition & Restoration:
+  ✅ gfpgan==1.3.8
+  ✅ basicsr==1.4.2 (has build issues, we have facexlib as alternative)
+  ✅ facexlib==0.3.0 (already v0.3.0)
+
+Face Detection:
+  ✅ retinaface (via facexlib)
+
+FAISS (Vector Search):
+  ✅ faiss-cpu==1.7.4 or higher
+
+Testing & Security:
+  ✅ pytest==7.4.3 or higher (already 9.0.2)
+  ✅ pytest-asyncio==0.21.1 or higher (already 1.3.0)
+  ✅ python-jose[cryptography]==3.3.0 or higher
+  ✅ passlib[bcrypt]==1.7.4 or higher
+  ✅ email-validator (already installed)
+  ✅ bcrypt (already installed)
+
+PDF & Reporting:
+  ✅ reportlab==4.0.7 or higher
+  ✅ pypdf2==3.0.1 or higher
+
+HTTP Client:
+  ✅ httpx==0.25.2 or higher (already 0.40.0)
+
+Steps:
+  1. Install missing packages (attempt non-problematic ones first)
+     Command: pip install gfpgan facexlib reportlab pypdf2 -q
+     
+  2. If basicsr fails (expected), skip it
+     Note: BasicSR has version conflicts, not critical for core functionality
+  
+  3. Verify all installations
+     Command: pip list | grep -E "fastapi|torch|onnx|gfpgan|faiss"
+
+Status: [ ] NOT STARTED
+
+
+═════════════════════════════════════════════════════════════════════════════
+PHASE 4: GPU ACCELERATION VERIFICATION
+═════════════════════════════════════════════════════════════════════════════
+
+Create verification script (save as: verify_gpu.py):
+
+```python
+import torch
+import onnxruntime as ort
+
+print("\n" + "="*70)
+print("GPU ACCELERATION VERIFICATION")
+print("="*70)
+
+# PyTorch
+print("\n1. PyTorch:")
+print(f"   Version: {torch.__version__}")
+print(f"   CUDA Available: {torch.cuda.is_available()}")
+if torch.cuda.is_available():
+    print(f"   Device: {torch.cuda.get_device_name(0)}")
+    props = torch.cuda.get_device_properties(0)
+    print(f"   Total Memory: {props.total_memory / 1e9:.1f} GB")
+    print(f"   Capability: {torch.cuda.get_device_capability(0)}")
+    print("   ✅ PyTorch GPU ENABLED")
+else:
+    print("   ❌ PyTorch CPU only")
+
+# ONNX Runtime
+print("\n2. ONNX Runtime:")
+print(f"   Version: {ort.__version__}")
+providers = ort.get_available_providers()
+print(f"   Available Providers: {', '.join(providers)}")
+if 'CUDAExecutionProvider' in providers:
+    print("   ✅ ONNX Runtime GPU ENABLED")
+else:
+    print("   ⚠️  ONNX Runtime CPU only")
+
+print("\n" + "="*70)
+```
+
+Run: python verify_gpu.py
+
+Expected Output:
+  ✅ PyTorch CUDA: True
+  ✅ ONNX CUDA Provider: Available
+  ✅ GPU Memory: 6GB detected
+
+Status: [ ] NOT STARTED
+
+
+═════════════════════════════════════════════════════════════════════════════
+PHASE 5: BACKEND SERVER STARTUP
+═════════════════════════════════════════════════════════════════════════════
+
+Steps:
+  1. Navigate to backend directory
+     Command: cd D:\KAVHACK\KAAVALFINAL-20260119T012636Z-3-001\KAAVALFINAL\backend
+  
+  2. Start server
+     Command: python start_server.py
+     
+     Expected startup output:
+     ✅ Server will start on: http://localhost:8000
+     ✅ API Documentation: http://localhost:8000/docs
+     ✅ Application startup complete
+     ✅ ⚠️ WARNING: GPU requested but torch.cuda.is_available() is False. [This will change after Phase 2]
+     ✅ ✅ Loaded RetinaFace ONNX model
+     ✅ ✅ Loaded ArcFace model
+     ✅ ✅ Loaded FAISS index
+  
+  3. Verify API is accessible
+     Command: curl http://localhost:8000/docs
+     Or open browser: http://localhost:8000/docs
+
+Status: [ ] NOT STARTED
+
+
+═════════════════════════════════════════════════════════════════════════════
+PHASE 6: GPU CONSUMPTION MONITORING
+═════════════════════════════════════════════════════════════════════════════
+
+Monitor GPU usage during operations:
+  
+  Command (Windows): nvidia-smi -l 1
+  (Updates every 1 second)
+  
+  Expected when running face detection:
+  • GPU Memory Used: 200-800 MB (depending on model)
+  • GPU Utilization: 30-95%
+  • Temperature: 40-60°C
+  
+  What to look for:
+  ✅ GPU Memory increases when processing starts
+  ✅ GPU Util increases above 0%
+  ✅ No "CPU" in processes (should show Python)
+
+Status: [ ] NOT STARTED
+
+
+═════════════════════════════════════════════════════════════════════════════
+PHASE 7: FRONTEND & CAMERA SETUP
+═════════════════════════════════════════════════════════════════════════════
+
+Frontend Integration:
+  1. Frontend files location: 
+     D:\KAVHACK\KAAVALFINAL-20260119T012636Z-3-001\KAAVALFINAL\frontend\
+  
+  2. Start frontend (simple HTTP server):
+     Command: python -m http.server 3000 --directory frontend
+     Or use Live Server extension in VS Code
+  
+  3. Access frontend:
+     URL: http://localhost:3000
+
+Camera Module Testing:
+  1. API Endpoint: POST http://localhost:8000/api/camera/start
+  2. Expected response: Camera initialized and ready
+  3. Expected in logs: "Camera module active"
+
+Status: [ ] NOT STARTED
+
+
+═════════════════════════════════════════════════════════════════════════════
+PHASE 8: FULL SYSTEM VERIFICATION
+═════════════════════════════════════════════════════════════════════════════
+
+Checklist:
+  [ ] Python 3.11 running
+  [ ] PyTorch CUDA enabled (torch.cuda.is_available() = True)
+  [ ] ONNX Runtime GPU provider active
+  [ ] Backend server running (http://localhost:8000 accessible)
+  [ ] All models loaded (RetinaFace, ArcFace, GFPGAN, FAISS)
+  [ ] GPU memory usage detected (nvidia-smi shows Python process)
+  [ ] API documentation accessible (http://localhost:8000/docs)
+  [ ] Frontend accessible (http://localhost:3000)
+  [ ] Camera API responds (POST /api/camera/start)
+  [ ] No critical errors in server logs
+
+Status: [ ] NOT STARTED
+
+
+═════════════════════════════════════════════════════════════════════════════
+TROUBLESHOOTING REFERENCE
+═════════════════════════════════════════════════════════════════════════════
+
+If PyTorch install fails:
+  → Check conda channels: conda config --show channels
+  → Try: conda install pytorch torchvision pytorch-cuda=12.1 -c pytorch -c nvidia --no-deps -y
+
+If CUDA detection fails (torch.cuda.is_available() = False):
+  → Driver issue: nvidia-smi should work
+  → PyTorch build issue: Reinstall with explicit CUDA version
+  → Fallback: Use CPU mode (slower but functional)
+
+If network timeouts:
+  → Use conda instead of pip
+  → Check internet connection
+  → Use local package mirrors if available
+
+If "ModuleNotFoundError":
+  → Ensure conda environment activated
+  → Run: pip install <package_name> -q
+
+If port 8000 already in use:
+  → Kill process: taskkill /FI "WINDOWTITLE eq *start_server.py*" /T /F
+  → Or modify port in backend/app/main.py
+
+If camera shows "waiting for camera":
+  → Check camera module API: GET http://localhost:8000/api/camera/health
+  → Verify USB camera connected (if using external)
+  → Check logs for initialization errors
+
+
+═════════════════════════════════════════════════════════════════════════════
+EXECUTION COMMAND SEQUENCE
+═════════════════════════════════════════════════════════════════════════════
+
+When ready, execute in this order:
+
+# PHASE 1
+conda create -n kaaval-py311 python=3.11 -y
+conda activate kaaval-py311
+python --version
+
+# PHASE 2
+conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia -y
+python -c "import torch; print(torch.cuda.is_available())"
+
+# PHASE 3
+cd D:\KAVHACK\KAAVALFINAL-20260119T012636Z-3-001\KAAVALFINAL
+pip install gfpgan facexlib reportlab pypdf2 -q
+
+# PHASE 4
+python verify_gpu.py
+
+# PHASE 5
+cd backend
+python start_server.py
+
+# PHASE 6 (in separate terminal)
+nvidia-smi -l 1
+
+# PHASE 7 (in separate terminal)
+cd frontend
+python -m http.server 3000
+
+# PHASE 8
+Test all endpoints and verify checklist
+
+
+═════════════════════════════════════════════════════════════════════════════
+ESTIMATED TIMELINE
+═════════════════════════════════════════════════════════════════════════════
+
+Phase 1 (Python setup):        ~2 minutes
+Phase 2 (PyTorch + CUDA):      ~15 minutes (network dependent)
+Phase 3 (Dependencies):        ~5 minutes
+Phase 4 (GPU Verification):    ~1 minute
+Phase 5 (Backend startup):     ~2 minutes
+Phase 6 (GPU Monitoring):      Continuous during testing
+Phase 7 (Frontend setup):       ~1 minute
+Phase 8 (Full verification):   ~5 minutes
+
+TOTAL ESTIMATED TIME: 30-45 minutes
+
+
+═════════════════════════════════════════════════════════════════════════════
+
+Plan Status: ✅ READY FOR EXECUTION
+
+Next Step: User confirms to proceed → Execute phases sequentially
+
+═════════════════════════════════════════════════════════════════════════════

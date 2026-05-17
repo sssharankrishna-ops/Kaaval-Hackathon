@@ -1,0 +1,26 @@
+✅ Loaded RetinaFace ONNX model from C:\Users\Thiyanesh\OneDrive\Documents\kaaval folder\KAAVALFINAL\backend\models\retinaface.onnx
+✅ Loaded Haar Cascade fallback detector
+✅ Loaded ArcFace model from C:\Users\Thiyanesh\OneDrive\Documents\kaaval folder\KAAVALFINAL\backend\models\arcface_resnet100.onnx
+✅ Loaded AttributeNet model from C:\Users\Thiyanesh\OneDrive\Documents\kaaval folder\KAAVALFINAL\backend\models\attribute_net.onnx
+✅ Loaded FAISS index from C:\Users\Thiyanesh\OneDrive\Documents\kaaval folder\KAAVALFINAL\backend\models\faiss\embeddings.index (126 embeddings)
+✅ Loaded metadata: 126 embeddings, dimension 512
+Error loading StyleGAN model: Invalid magic number; corrupt file?
+INFO:     127.0.0.1:49760 - "POST /api/database/search HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:49782 - "POST /api/database/search HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53962 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53963 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53964 - "POST /api/database/search HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50299 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50304 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50305 - "GET /api/analytics/dashboard HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50306 - "GET /api/database/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "POST /api/camera/start HTTP/1.1" 200 OK
+✅ Loaded RetinaFace ONNX model from C:\Users\Thiyanesh\OneDrive\Documents\kaaval folder\KAAVALFINAL\backend\models\retinaface.onnx
+✅ Loaded Haar Cascade fallback detector
+✅ Loaded ArcFace model from C:\Users\Thiyanesh\OneDrive\Documents\kaaval folder\KAAVALFINAL\backend\models\arcface_resnet100.onnx
+✅ Loaded AttributeNet model from C:\Users\Thiyanesh\OneDrive\Documents\kaaval folder\KAAVALFINAL\backend\models\attribute_net.onnx
+✅ Loaded FAISS index from C:\Users\Thiyanesh\OneDrive\Documents\kaaval folder\KAAVALFINAL\backend\models\faiss\embeddings.index (126 embeddings)
+✅ Loaded metadata: 126 embeddings, dimension 512
+INFO:     127.0.0.1:50311 - "GET /api/analytics/dashboard HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50315 - "GET /api/camera/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50318 - "GET /api/reports/missing/recent?limit=5 HTTP/1.1" 200 OK

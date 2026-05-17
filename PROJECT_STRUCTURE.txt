@@ -1,0 +1,96 @@
+
+# KAAVAL AI - PROJECT STRUCTURE & FILE OVERVIEW
+
+This project is organized into a clean, modular structure for forensic AI reconstruction and real-time surveillance.
+
+## 📁 /backend
+The core engine of the system, built with FastAPI.
+
+### 📁 /app
+- **main.py**: Entry point. Manages server startup, lifespan events, and global routing.
+- **core/**:
+  - **config.py**: Global settings (GPU/CPU toggles, paths, performance thresholds).
+  - **init_db.py**: Database initialization logic.
+- **api/v1/**:
+  - **image.py**: Endpoints for face restoration and age progression.
+  - **video.py**: Endpoints for video upload and processing.
+  - **camera.py**: Live streaming management.
+  - **database.py**: Person database management.
+- **ml/**: The AI Layer.
+  - **detectors/**: RetinaFace ONNX implementation with OpenCV fallback.
+  - **recognizers/**: ArcFace embedding extractor (512-d).
+  - **attributes/**: Multi-task CNN for gender, age, and ethnicity.
+  - **restoration/**: GFPGAN implementation for facial reconstruction.
+  - **age_progression/**: StyleGAN-based temporal variation modules.
+- **pipelines/**: Orchestrators.
+  - **image_pipeline.py**: Manages the flow of restoration + attributes.
+  - **video_pipeline.py**: Manages frame extraction, face tracking, and matching.
+- **services/**: Business logic that connects API endpoints to pipelines.
+
+## 📁 /frontend
+The user interface, built as a modern Single Page Application (SPA).
+- **index.html**: Main dashboard (Surveillance, Registry, Forensic Lab).
+- **styles/main.css**: Futuristic "Hacker" dark theme.
+- **scripts/main.js**: Frontend logic and real-time API integration.
+
+## 📁 /models
+Storage for all AI model weights (ONNX, PTH, PT files).
+- **manifest.json**: Configuration mappings for which files the models should use.
+- **faiss/**: Vector database index for instant face matching.
+
+## 📁 /standalone
+Individual, independent scripts to test AI models without running the full server.
+- **test_detector.py**: Verifies face detection.
+- **test_recognizer.py**: Verifies embedding generation.
+- **test_attributes.py**: Verifies trait extraction (age/gender).
+- **test_restoration.py**: Verifies forensic reconstruction.
+
+## 📁 /benchmarks
+- **run_benchmark.py**: Measures the exact FPS and Latency of each model on your hardware.
+
+---
+Created by Antigravity AI
+
+# ============================================================
+# 🧠 AI MODELS & CORE FUNCTIONALITY
+# ============================================================
+
+| Model Name       | Core Function                                                                 | Tech Used        |
+| :--------------- | :---------------------------------------------------------------------------- | :--------------- |
+| **RetinaFace**   | **Detection**: Finds all faces in a high-res image or video frame.            | ONNX / ResNet50  |
+| **ArcFace**      | **Identity**: Converts a face into a unique 512-digit code (Embedding).       | ONNX / ResNet100 |
+| **GFPGAN**       | **Forensics**: Fixes blurry, pixelated, or damaged old photos.                | PyTorch / GAN    |
+| **AttributeNet** | **Profiling**: Predicts Age, Gender, and Ethnicity.                           | ONNX / Multi-CNN |
+| **StyleGAN**     | **Time Travel**: Simulates how a person looks as they get older.              | PyTorch          |
+| **FAISS**        | **Instant Search**: Compares one face against millions in milliseconds.       | Vector Index     |
+| **Haar Cascade** | **Safety**: A lightweight backup detector that runs if the AI fails.          | OpenCV           |
+
+# ============================================================
+# 🔄 SYSTEM DATA FLOW
+# ============================================================
+
+## A. Image Restoration Flow (Forensics)
+1.  **Frontend**: User uploads a low-quality photo.
+2.  **API**: Request travels to `POST /api/v1/image/restore`.
+3.  **Restoration**: **GFPGAN** reconstructs pixels to make the face sharp.
+4.  **Extraction**: **AttributeNet** analyzes the sharp face for traits (Age/Gender).
+5.  **Identity**: **ArcFace** generates a unique biological footprint.
+6.  **Display**: Clear image and metadata are returned to the Dashboard.
+
+## B. Video Analysis Flow (Surveillance)
+1.  **Frontend**: User uploads a CCTV video + a "Target" reference photo.
+2.  **Target Encoding**: The Target Photo is turned into a 512-d code via **ArcFace**.
+3.  **Frame Scanning**: Video is broken into frames; **RetinaFace** finds every face in every frame.
+4.  **Matching**: Faces in the video are mathematically compared to the Target Code.
+5.  **Alerting**: Matches above 70% threshold generate an Event with timestamp and location.
+
+# ============================================================
+# 📂 DATASETS & FEATURE EXTRACTION
+# ============================================================
+The project currently manages a high-speed search index (`backend/models/faiss/embeddings.index`) containing pre-extracted features for known individuals. 
+
+**Adding New Data:**
+- Place images in `backend/data/registry/`.
+- The system automatically triggers the "Extraction" pipeline to turn raw pixels into searchable vectors.
+- Result: Instant identification capabilities across the entire library.
+

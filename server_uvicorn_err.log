@@ -1,0 +1,35 @@
+INFO:     Started server process [41292]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+C:\Users\Thiyanesh\OneDrive\Documents\kaaval folder\KAAVALFINAL\.venv\lib\site-packages\torch\cuda\__init__.py:235: UserWarning: 
+NVIDIA GeForce RTX 5050 Laptop GPU with CUDA capability sm_120 is not compatible with the current PyTorch installation.
+The current PyTorch install supports CUDA capabilities sm_50 sm_60 sm_61 sm_70 sm_75 sm_80 sm_86 sm_90.
+If you want to use the NVIDIA GeForce RTX 5050 Laptop GPU GPU with PyTorch, please check the instructions at https://pytorch.org/get-started/locally/
+
+  warnings.warn(
+C:\Users\Thiyanesh\OneDrive\Documents\kaaval folder\KAAVALFINAL\.venv\lib\site-packages\torchvision\models\_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+C:\Users\Thiyanesh\OneDrive\Documents\kaaval folder\KAAVALFINAL\.venv\lib\site-packages\torchvision\models\_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=None`.
+  warnings.warn(msg)
+C:\Users\Thiyanesh\OneDrive\Documents\kaaval folder\KAAVALFINAL\.venv\lib\site-packages\facexlib\detection\__init__.py:22: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  load_net = torch.load(model_path, map_location=lambda storage, loc: storage)
+C:\Users\Thiyanesh\OneDrive\Documents\kaaval folder\KAAVALFINAL\.venv\lib\site-packages\facexlib\parsing\__init__.py:20: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  load_net = torch.load(model_path, map_location=lambda storage, loc: storage)
+C:\Users\Thiyanesh\OneDrive\Documents\kaaval folder\KAAVALFINAL\.venv\lib\site-packages\gfpgan\utils.py:92: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  loadnet = torch.load(model_path)
+C:\Users\Thiyanesh\OneDrive\Documents\kaaval folder\KAAVALFINAL\backend\app\ml\age_progression\stylegan.py:80: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  loaded = torch.load(str(path), map_location=self.device)
+INFO:kaaval.performance:{"path": "/api/database/search", "method": "POST", "status_code": 422, "duration_ms": 6944.63}
+INFO:kaaval.performance:{"path": "/api/database/search", "method": "POST", "status_code": 200, "duration_ms": 24.55}
+INFO:kaaval.performance:{"path": "/", "method": "GET", "status_code": 200, "duration_ms": 1.13}
+INFO:kaaval.performance:{"path": "/healthz", "method": "GET", "status_code": 200, "duration_ms": 0.52}
+INFO:kaaval.performance:{"path": "/api/database/search", "method": "POST", "status_code": 200, "duration_ms": 19.15}
+INFO:kaaval.performance:{"path": "/healthz", "method": "GET", "status_code": 200, "duration_ms": 1.23}
+INFO:kaaval.performance:{"path": "/healthz", "method": "GET", "status_code": 200, "duration_ms": 1.12}
+INFO:kaaval.performance:{"path": "/api/analytics/dashboard", "method": "GET", "status_code": 200, "duration_ms": 1.72}
+INFO:kaaval.performance:{"path": "/api/database/stats", "method": "GET", "status_code": 200, "duration_ms": 66.8}
+INFO:kaaval.performance:{"path": "/api/camera/start", "method": "POST", "status_code": 200, "duration_ms": 2.59}
+INFO:kaaval.performance:{"path": "/api/analytics/dashboard", "method": "GET", "status_code": 200, "duration_ms": 2.08}
+INFO:kaaval.performance:{"path": "/api/camera/health", "method": "GET", "status_code": 200, "duration_ms": 1.66}
+INFO:kaaval.performance:{"path": "/api/reports/missing/recent", "method": "GET", "status_code": 200, "duration_ms": 28.06}

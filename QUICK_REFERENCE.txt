@@ -1,0 +1,210 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                   KAAVAL SYSTEM - QUICK REFERENCE CARD                       ║
+║                                                                              ║
+║                          EXECUTION CHECKLIST                                 ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+STATUS BEFORE EXECUTION
+═════════════════════════════════════════════════════════════════════════════
+
+✅ GOOD:
+  • GPU Available: NVIDIA RTX 3050 (6GB)
+  • CUDA Toolkit: 13.0
+  • Driver: 581.57
+  • All ML models downloaded (1.7GB total)
+  • Most packages installed
+
+❌ PROBLEMS:
+  • Python 3.13.9 (too new, not supported)
+  • PyTorch not installed
+  • CUDA not configured
+  • Some dependencies missing
+
+
+═════════════════════════════════════════════════════════════════════════════
+QUICK START COMMANDS (Copy-Paste Ready)
+═════════════════════════════════════════════════════════════════════════════
+
+Step 1: Create Python 3.11 Environment
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+conda create -n kaaval-py311 python=3.11 -y
+
+Step 2: Activate Environment
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+conda activate kaaval-py311
+
+Step 3: Install PyTorch with CUDA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia -y
+
+Step 4: Install Missing Packages
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+pip install gfpgan facexlib reportlab pypdf2 -q
+
+Step 5: Start Backend Server
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+cd D:\KAVHACK\KAAVALFINAL-20260119T012636Z-3-001\KAAVALFINAL\backend
+python start_server.py
+
+Step 6: Start Frontend (New Terminal)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+cd D:\KAVHACK\KAAVALFINAL-20260119T012636Z-3-001\KAAVALFINAL\frontend
+python -m http.server 3000
+
+
+═════════════════════════════════════════════════════════════════════════════
+VERIFICATION COMMANDS
+═════════════════════════════════════════════════════════════════════════════
+
+Check Python Version:
+  python --version
+  Expected: Python 3.11.x
+
+Check PyTorch CUDA:
+  python -c "import torch; print('CUDA:', torch.cuda.is_available())"
+  Expected: CUDA: True
+
+Check ONNX GPU:
+  python -c "import onnxruntime as ort; print('GPU:', 'CUDAExecutionProvider' in ort.get_available_providers())"
+  Expected: GPU: True
+
+Check GPU Usage:
+  nvidia-smi
+  Expected: NVIDIA GeForce RTX 3050 visible
+
+Check Backend API:
+  curl http://localhost:8000/docs
+  Expected: Swagger UI opens
+
+Check Frontend:
+  Open browser to http://localhost:3000
+  Expected: KAAVAL interface loads
+
+
+═════════════════════════════════════════════════════════════════════════════
+KEY DECISIONS IN THIS PLAN
+═════════════════════════════════════════════════════════════════════════════
+
+1. WHY Python 3.11?
+   • PyTorch officially supports: 3.8, 3.9, 3.10, 3.11, 3.12
+   • Python 3.13 is TOO NEW (not supported yet)
+   • Python 3.11 is stable, widely compatible
+   
+2. WHY CUDA 12.1 (not 13.0)?
+   • PyTorch best optimized for CUDA 12.1
+   • CUDA 12.1 drivers work with CUDA 13.0 Toolkit
+   • Maximum compatibility and stability
+   
+3. WHY conda (not pip)?
+   • Faster: Uses cached packages locally
+   • Reliable: Better dependency resolution
+   • Stable: CUDA integration handled automatically
+   • PyTorch provides conda as primary distribution method
+   
+4. WHY skip basicsr?
+   • Has build issues (version conflicts)
+   • Not critical for core face recognition
+   • GFPGAN works without it for face restoration
+   • Can be added later if needed
+
+
+═════════════════════════════════════════════════════════════════════════════
+EXPECTED SUCCESS INDICATORS
+═════════════════════════════════════════════════════════════════════════════
+
+After Complete Setup:
+
+Backend Server Logs Should Show:
+  ✅ INFO: Application startup complete
+  ✅ ✅ Loaded RetinaFace ONNX model (GPU/CPU)
+  ✅ ✅ Loaded ArcFace model (GPU/CPU)
+  ✅ ✅ Loaded FAISS index
+  ✅ ✅ Loaded GFPGAN restoration model
+  (No ERROR or WARNING: GPU requested but torch.cuda.is_available() is False)
+
+GPU Usage Should Show:
+  nvidia-smi output should show:
+  • Python process listed
+  • GPU Memory used: > 0 MB
+  • GPU Util: > 0%
+
+API Should Be Accessible:
+  http://localhost:8000/docs → Swagger UI loads
+  POST /api/camera/start → Returns 200 OK
+  GET /api/camera/health → Returns camera status
+
+Frontend Should Load:
+  http://localhost:3000 → KAAVAL UI appears
+  Camera controls visible
+  Analytics dashboard loads
+
+
+═════════════════════════════════════════════════════════════════════════════
+COMMON ISSUES & SOLUTIONS
+═════════════════════════════════════════════════════════════════════════════
+
+Issue: "conda: command not found"
+Solution: Restart terminal or add Anaconda to PATH
+
+Issue: Port 8000 already in use
+Solution: 
+  taskkill /FI "WINDOWTITLE eq *start_server.py*" /T /F
+  Then restart
+
+Issue: PyTorch still showing CUDA: False
+Solution:
+  • Verify: python -c "import torch; print(torch.__version__)"
+  • Should contain "+cu121"
+  • If not, uninstall and reinstall with conda
+
+Issue: "No module named 'X'"
+Solution:
+  • Ensure conda environment is activated
+  • pip install <package_name> -q
+
+Issue: GPU Memory 0 MB / GPU Util 0%
+Solution:
+  • Models loading to CPU instead of GPU
+  • Check ONNX Runtime GPU provider availability
+  • May need to update NVIDIA drivers
+
+
+═════════════════════════════════════════════════════════════════════════════
+AFTER SETUP: NEXT STEPS
+═════════════════════════════════════════════════════════════════════════════
+
+Once system is running:
+
+1. TEST FACE DETECTION:
+   POST http://localhost:8000/api/image/detect
+   Upload a test image → Should return face boxes
+
+2. TEST CAMERA:
+   POST http://localhost:8000/api/camera/start
+   Should initialize camera stream
+
+3. TEST RECOGNITION:
+   API uploads reference faces → System recognizes in camera feed
+
+4. MONITOR GPU:
+   Watch nvidia-smi during operations
+   Verify GPU usage increases
+
+5. CHECK PERFORMANCE:
+   Monitor API response times in browser
+   Verify fast face detection (< 500ms per frame)
+
+
+═════════════════════════════════════════════════════════════════════════════
+
+READY TO PROCEED? 
+
+When you confirm, we will execute:
+  1. Python 3.11 environment setup (2 min)
+  2. PyTorch + CUDA installation (15 min)
+  3. Dependencies installation (5 min)
+  4. Full verification (5 min)
+  
+Total time: ~30 minutes
+
+═════════════════════════════════════════════════════════════════════════════

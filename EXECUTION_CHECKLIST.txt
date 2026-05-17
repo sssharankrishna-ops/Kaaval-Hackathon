@@ -1,0 +1,297 @@
+═════════════════════════════════════════════════════════════════════════════
+                    KAAVAL SETUP - EXECUTION CHECKLIST
+═════════════════════════════════════════════════════════════════════════════
+
+PRINT THIS DOCUMENT & CHECK OFF AS YOU GO
+
+═════════════════════════════════════════════════════════════════════════════
+PRE-EXECUTION CHECKLIST
+═════════════════════════════════════════════════════════════════════════════
+
+Before starting, verify:
+
+[ ] You have read 00_START_HERE.txt
+[ ] You have read PLAN_SUMMARY.txt
+[ ] You have read SYSTEM_OVERVIEW.txt
+[ ] You have read EXECUTION_PLAN.txt
+[ ] You have read QUICK_REFERENCE.txt
+[ ] You understand all 8 phases
+[ ] You have internet connection (for downloads)
+[ ] You have admin privileges on your machine
+[ ] nvidia-smi command works (type: nvidia-smi)
+[ ] conda command works (type: conda --version)
+[ ] You have 5-10 GB free disk space
+[ ] You're ready to wait 30-45 minutes
+[ ] You have a cup of coffee ☕
+
+
+═════════════════════════════════════════════════════════════════════════════
+EXECUTION CHECKLIST
+═════════════════════════════════════════════════════════════════════════════
+
+PHASE 1: CREATE PYTHON 3.11 ENVIRONMENT
+─────────────────────────────────────────────────────────────────────────────
+[ ] Command: conda create -n kaaval-py311 python=3.11 -y
+    Status: _________________ Time: _______
+    
+[ ] Verification: python --version
+    Expected: Python 3.11.x
+    Result: _________________________________
+    
+[ ] Command: conda activate kaaval-py311
+    Status: _________________________________
+
+
+PHASE 2: INSTALL PYTORCH WITH CUDA
+─────────────────────────────────────────────────────────────────────────────
+[ ] Command: conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia -y
+    Status: _________________ Time: _______
+    Expected time: 10-20 minutes
+    
+[ ] Download size: ~2.2 GB (check your internet!)
+    
+[ ] Verification: python -c "import torch; print(torch.cuda.is_available())"
+    Expected: True
+    Result: _________________________________
+    
+[ ] Verification: python -c "import torch; print(torch.__version__)"
+    Expected: Contains "+cu121"
+    Result: _________________________________
+    
+[ ] Verification: python -c "import torch; print(torch.cuda.get_device_name(0))"
+    Expected: NVIDIA GeForce RTX 3050
+    Result: _________________________________
+
+
+PHASE 3: INSTALL MISSING PACKAGES
+─────────────────────────────────────────────────────────────────────────────
+[ ] Command: pip install gfpgan facexlib reportlab pypdf2 -q
+    Status: _________________ Time: _______
+    
+[ ] Verification: pip list | grep gfpgan
+    Expected: gfpgan 1.3.8 or higher
+    Result: _________________________________
+    
+[ ] Verification: pip list | grep facexlib
+    Expected: facexlib 0.3.0 or higher
+    Result: _________________________________
+
+
+PHASE 4: GPU VERIFICATION
+─────────────────────────────────────────────────────────────────────────────
+[ ] Create verify_gpu.py script (copy from EXECUTION_PLAN.txt)
+    Status: _________________ 
+    
+[ ] Run: python verify_gpu.py
+    Status: _________________ Time: _______
+    
+[ ] Result: All checks pass _________________ (YES/NO)
+
+[ ] Check output contains:
+    [ ] PyTorch CUDA Available: True
+    [ ] ONNX Runtime GPU ENABLED
+    [ ] No error messages
+
+
+PHASE 5: START BACKEND SERVER
+─────────────────────────────────────────────────────────────────────────────
+[ ] Navigate to: D:\KAVHACK\KAAVALFINAL-20260119T012636Z-3-001\KAAVALFINAL\backend
+
+[ ] Command: python start_server.py
+    Status: _________________ Time: _______
+    
+[ ] Startup messages should show:
+    [ ] Server will start on: http://localhost:8000
+    [ ] Application startup complete
+    [ ] ✅ Loaded RetinaFace ONNX model
+    [ ] ✅ Loaded ArcFace model
+    [ ] ✅ Loaded FAISS index
+    [ ] ✅ Loaded GFPGAN model
+    
+[ ] NO warnings about: "WARNING: GPU requested but torch.cuda.is_available() is False"
+    Status: _________________ (Should NOT see this warning)
+    
+[ ] API accessible: curl http://localhost:8000/docs
+    Status: _________________ (Should show Swagger UI)
+
+
+PHASE 6: GPU CONSUMPTION MONITORING
+─────────────────────────────────────────────────────────────────────────────
+[ ] Open NEW terminal window
+
+[ ] Command: nvidia-smi -l 1
+    (Updates every 1 second)
+    Status: _________________ Time: _______
+    
+[ ] Look for:
+    [ ] NVIDIA RTX 3050 listed
+    [ ] Python process in "Processes" section
+    [ ] GPU Memory Used > 0 MB
+    [ ] GPU Util > 0%
+    
+[ ] Take screenshot of nvidia-smi output
+    Status: _________________ (Save as reference)
+
+
+PHASE 7: FRONTEND SETUP
+─────────────────────────────────────────────────────────────────────────────
+[ ] Open ANOTHER new terminal window
+
+[ ] Navigate to: D:\KAVHACK\KAAVALFINAL-20260119T012636Z-3-001\KAAVALFINAL\frontend
+
+[ ] Command: python -m http.server 3000
+    Status: _________________ Time: _______
+    
+[ ] Frontend accessible: http://localhost:3000
+    Status: _________________ (Should load KAAVAL UI)
+    
+[ ] Camera controls visible in frontend
+    Status: _________________ (YES/NO)
+
+
+PHASE 8: FULL SYSTEM VERIFICATION
+─────────────────────────────────────────────────────────────────────────────
+
+Python & PyTorch:
+[ ] python --version → Python 3.11.x
+[ ] Python is from kaaval-py311 environment
+[ ] torch.cuda.is_available() → True
+[ ] ONNX detects GPU provider → Yes
+
+Backend Server:
+[ ] Running without errors
+[ ] All models loaded successfully
+[ ] API documentation accessible
+[ ] No GPU-related warnings
+[ ] Response times < 1 second
+
+GPU Hardware:
+[ ] nvidia-smi shows RTX 3050
+[ ] Python process visible in GPU
+[ ] GPU Memory used: 200-800 MB
+[ ] GPU Utilization: > 0%
+
+Frontend:
+[ ] Web UI loads at http://localhost:3000
+[ ] Camera controls visible
+[ ] Analytics dashboard loads
+[ ] No console errors
+
+API Endpoints:
+[ ] GET http://localhost:8000/docs → Swagger loads
+[ ] POST http://localhost:8000/api/camera/start → 200 OK
+[ ] GET http://localhost:8000/api/camera/health → 200 OK
+
+
+═════════════════════════════════════════════════════════════════════════════
+SUCCESS CRITERIA FINAL CHECK
+═════════════════════════════════════════════════════════════════════════════
+
+Mark ALL as complete:
+
+MUST HAVES (Critical):
+[ ] Python 3.11 active
+[ ] PyTorch installed with CUDA support
+[ ] torch.cuda.is_available() = True
+[ ] Backend server running
+[ ] API accessible
+[ ] GPU memory being used
+
+NICE TO HAVES (Quality):
+[ ] All models loaded in logs
+[ ] GPU utilization shown in nvidia-smi
+[ ] Frontend loads smoothly
+[ ] API responses < 500ms
+[ ] No warnings or errors
+
+OPTIONAL (Nice):
+[ ] Screenshot of successful startup
+[ ] GPU memory graph
+[ ] Performance metrics
+
+
+═════════════════════════════════════════════════════════════════════════════
+TROUBLESHOOTING LOG
+═════════════════════════════════════════════════════════════════════════════
+
+If you encounter any issues, log them here:
+
+Issue #1:
+  Symptom: _________________________________
+  When: _____________ Phase ___
+  Solution attempted: _______________________
+  Result: _________________________________
+
+Issue #2:
+  Symptom: _________________________________
+  When: _____________ Phase ___
+  Solution attempted: _______________________
+  Result: _________________________________
+
+Issue #3:
+  Symptom: _________________________________
+  When: _____________ Phase ___
+  Solution attempted: _______________________
+  Result: _________________________________
+
+
+═════════════════════════════════════════════════════════════════════════════
+FINAL SIGN-OFF
+═════════════════════════════════════════════════════════════════════════════
+
+Date: __________________
+Time Started: __________
+Time Completed: ________
+Total Duration: ________
+
+System Status:
+  ✅ Working / ⚠️  Partial / ❌ Failed
+
+Overall Assessment:
+  □ All systems operational
+  □ Minor issues, still working
+  □ Major issues, needs debugging
+
+Next Actions:
+  _________________________________________________________________
+  _________________________________________________________________
+  _________________________________________________________________
+
+
+═════════════════════════════════════════════════════════════════════════════
+CAMERA MODULE TESTING (After successful setup)
+═════════════════════════════════════════════════════════════════════════════
+
+When you're ready to test camera functionality:
+
+[ ] Test 1: Camera Health Check
+    Endpoint: GET http://localhost:8000/api/camera/health
+    Expected: { "status": "ready", ... }
+    
+[ ] Test 2: Start Camera
+    Endpoint: POST http://localhost:8000/api/camera/start
+    Expected: { "status": "started", ... }
+    
+[ ] Test 3: Face Detection API
+    Endpoint: POST http://localhost:8000/api/image/detect
+    Body: Upload image file
+    Expected: Face boxes returned
+    
+[ ] Test 4: Face Recognition
+    Endpoint: POST http://localhost:8000/api/image/recognize
+    Body: Upload image file
+    Expected: Identified persons returned
+    
+[ ] Test 5: Real-time Camera Feed
+    Access: http://localhost:3000
+    Action: Click "Start Camera"
+    Expected: Live video with face detection boxes
+
+
+═════════════════════════════════════════════════════════════════════════════
+
+✅ SETUP COMPLETE
+
+Your KAAVAL system is ready for testing!
+
+═════════════════════════════════════════════════════════════════════════════
